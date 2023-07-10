@@ -101,7 +101,6 @@ def reading_data(data, name):
 
 
 def think_answer(text, model):
-
     prompt = f"""
 あなたはベテランのプレゼンテーターです。
 
@@ -161,7 +160,6 @@ def think_answer(text, model):
 
 
 if __name__ == "__main__":
-
     st.set_page_config(page_title="ppt2txt", page_icon="📚", layout="wide")
 
     hide_streamlit_style = """
@@ -209,10 +207,11 @@ if __name__ == "__main__":
             ask_submit = st.button("評価")
 
         if all([ask_submit, all_text]):
-            message_placeholder = st.empty()
-            full_response = ""
-            for response in think_answer(all_text, model):
-                full_response += response["choices"][0]["delta"].get("content", "")
-                message_placeholder.write(full_response)
+            with st.chat_message("assistant"):
+                message_placeholder = st.empty()
+                full_response = ""
+                for response in think_answer(all_text, model):
+                    full_response += response["choices"][0]["delta"].get("content", "")
+                    message_placeholder.write(full_response)
     else:
         st.image("./image/logo.png")
