@@ -183,7 +183,7 @@ if __name__ == "__main__":
                 all_text = reading_data(url, url)
 
     if any([file, url]):
-        with st.expander(f"抽出結果:{file.name}"):
+        with st.expander(f"抽出結果:{file.name if file else url}"):
             st.code(all_text)
 
         col1, col2 = st.columns(2)
