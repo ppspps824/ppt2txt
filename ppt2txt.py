@@ -54,7 +54,11 @@ def order_shapes(shapes):
 def reading_data(data, name):
     check_name = name.lower()
 
-    if ".pdf" in check_name:
+    if "http" in check_name:
+        BeautifulSoupWebReader = download_loader("BeautifulSoupWebReader")
+        loader = BeautifulSoupWebReader()
+        documents = loader.load_data(urls=[name])[0].text
+    elif ".pdf" in check_name:
         PDFReader = download_loader("PDFReader")
         loader = PDFReader()
         documents = loader.load_data(file=data)[0].text
@@ -80,10 +84,6 @@ def reading_data(data, name):
         YoutubeTranscriptReader = download_loader("YoutubeTranscriptReader")
         loader = YoutubeTranscriptReader()
         documents = loader.load_data(ytlinks=[name])[0].text
-    elif "http" in check_name:
-        BeautifulSoupWebReader = download_loader("BeautifulSoupWebReader")
-        loader = BeautifulSoupWebReader()
-        documents = loader.load_data(urls=[name])[0].text
     # elif ext in [".png", ".jpeg", ".jpg"]:
     #     ImageCaptionReader = download_loader("ImageCaptionReader")
     #     loader = ImageCaptionReader()
@@ -183,7 +183,7 @@ if __name__ == "__main__":
                 all_text = reading_data(url, url)
 
     if any([file, url]):
-        with st.expander(f"抽出結果:{file.name if file else url}"):
+        with st.expander(f"抽出結果:{file.name if file else url} / {len(all_text)}字"):
             st.code(all_text)
 
         col1, col2 = st.columns(2)
