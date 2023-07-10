@@ -51,6 +51,7 @@ def order_shapes(shapes):
     return sorted(shapes, key=lambda x: (x.top, x.left))
 
 
+@st.cache_data
 def reading_data(data, name):
     check_name = name.lower()
 
@@ -108,15 +109,15 @@ def think_answer(text, model):
 
 1.いい点
 
-具体的かつ最大限褒めちぎる。
+最大限褒めちぎる。具体的3つ
 
 2.改善できる点
 
-プレゼンテーションの文章として最も重要かつ簡単に取り組める内容で簡潔に一つ。
+重要かつ簡単に取り組める内容と修正例を具体的に3つ
 
 3.質問
 
-聴講者の理解が深まる内容で簡潔に一つ。
+読者の理解が深まる本質的な内容で具体的に3つ
 
 {text}
     
@@ -161,6 +162,19 @@ def think_answer(text, model):
 
 if __name__ == "__main__":
 
+    st.set_page_config(page_title="ppt2txt", page_icon="📚", layout="wide")
+
+    hide_streamlit_style = """
+                <style>
+               .block-container {
+                    padding-top: 2rem;
+                }
+                #MainMenu {visibility: hidden;}
+                footer {visibility: hidden;}
+                </style>
+                """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
     os.environ["OPENAI_API_KEY"] = st.secrets["OPEN_AI_KEY"]
     openai.api_key = st.secrets["OPEN_AI_KEY"]
 
@@ -168,7 +182,6 @@ if __name__ == "__main__":
         file = None
         url = ""
         input_select = st.selectbox("読み込み形式を選択", ["File", "URL"])
-
         if input_select == "File":
             file = st.file_uploader("File")
             if file:
@@ -201,3 +214,5 @@ if __name__ == "__main__":
             for response in think_answer(all_text, model):
                 full_response += response["choices"][0]["delta"].get("content", "")
                 message_placeholder.write(full_response)
+    else:
+        st.image("./image/logo.png")
