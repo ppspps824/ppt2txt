@@ -62,7 +62,7 @@ def reading_data(data, name):
     elif ".pdf" in check_name:
         PDFReader = download_loader("PDFReader")
         loader = PDFReader()
-        documents = [value.text for value in loader.load_data(file=data)]
+        documents = "\n".join([value.text for value in loader.load_data(file=data)])
     elif any([".txt" in check_name, ".md" in name]):
         MarkdownReader = download_loader("MarkdownReader")
         loader = MarkdownReader()
