@@ -62,7 +62,7 @@ def reading_data(data, name):
     elif ".pdf" in check_name:
         PDFReader = download_loader("PDFReader")
         loader = PDFReader()
-        documents = [value for value in loader.load_data(file=data).text]
+        documents = [value.text for value in loader.load_data(file=data)]
     elif any([".txt" in check_name, ".md" in name]):
         MarkdownReader = download_loader("MarkdownReader")
         loader = MarkdownReader()
@@ -72,7 +72,7 @@ def reading_data(data, name):
     elif ".docx" in check_name:
         DocxReader = download_loader("DocxReader")
         loader = DocxReader()
-        documents = [value for value in loader.load_data(file=data).text]
+        documents = [value.text for value in loader.load_data(file=data)]
     elif any([".mp3" in check_name, ".mp4" in check_name]):
         AudioTranscriber = download_loader("AudioTranscriber")
         loader = AudioTranscriber()
