@@ -63,6 +63,10 @@ def reading_data(data, name):
         PDFReader = download_loader("PDFReader")
         loader = PDFReader()
         documents = loader.load_data(file=data)[0].text
+    elif ".xlsx" in check_name:
+        PandasExcelReader = download_loader("PandasExcelReader")
+        loader = PandasExcelReader(pandas_config={"header": 0})
+        documents = loader.load_data(file=data)[0].text
     elif any([".txt" in check_name, ".md" in name]):
         MarkdownReader = download_loader("MarkdownReader")
         loader = MarkdownReader()
@@ -101,7 +105,6 @@ def reading_data(data, name):
 
 
 def think_answer(text, model):
-
     prompt = f"""
 あなたはベテランのプレゼンテーターです。
 
@@ -161,7 +164,6 @@ def think_answer(text, model):
 
 
 if __name__ == "__main__":
-
     st.set_page_config(page_title="ppt2txt", page_icon="📚", layout="wide")
 
     hide_streamlit_style = """
@@ -202,7 +204,8 @@ if __name__ == "__main__":
         col1, col2 = st.columns(2)
 
         with col1:
-            model = st.selectbox("評価モデルを選択", ["gpt-4", "gpt-3.5-turbo"])
+            models = ["gpt-4-1106-preview", "gpt-4", "gpt-3.5-turbo"]
+            model = st.selectbox("評価モデルを選択", models)
         with col2:
             st.write("")
             st.write("")
