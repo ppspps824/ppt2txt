@@ -226,3 +226,4 @@ if __name__ == "__main__":
             st.image("./image/logo.png")
     else:
         st.info("👈OPEN_AI_KEYを入力してください。")
+        st.image("./image/logo.png")
