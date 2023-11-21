@@ -177,10 +177,11 @@ if __name__ == "__main__":
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-    os.environ["OPENAI_API_KEY"] = st.secrets["OPEN_AI_KEY"]
-    openai.api_key = st.secrets["OPEN_AI_KEY"]
+    # os.environ["OPENAI_API_KEY"] = st.secrets["OPEN_AI_KEY"]
+    # openai.api_key = st.secrets["OPEN_AI_KEY"]
 
     with st.sidebar:
+        openai.api_key = st.text_input("OPEN_AI_KEYを入力", type="password")
         file = None
         url = ""
         input_select = st.selectbox("読み込み形式を選択", ["File", "URL"])
@@ -197,26 +198,31 @@ if __name__ == "__main__":
                 fp = url
                 all_text = reading_data(url, url)
 
-    if any([file, url]):
-        with st.expander(f"抽出結果:{file.name if file else url} / {len(all_text)}字"):
-            st.code(all_text)
+    if openai.api_key:
+        if any([file, url]):
+            with st.expander(f"抽出結果:{file.name if file else url} / {len(all_text)}字"):
+                st.code(all_text)
 
-        col1, col2 = st.columns(2)
+            col1, col2 = st.columns(2)
 
-        with col1:
-            models = ["gpt-4-1106-preview", "gpt-4", "gpt-3.5-turbo"]
-            model = st.selectbox("評価モデルを選択", models)
-        with col2:
-            st.write("")
-            st.write("")
-            ask_submit = st.button("評価")
+            with col1:
+                models = ["gpt-4-1106-preview", "gpt-4", "gpt-3.5-turbo"]
+                model = st.selectbox("評価モデルを選択", models)
+            with col2:
+                st.write("")
+                st.write("")
+                ask_submit = st.button("評価")
 
-        if all([ask_submit, all_text]):
-            with st.chat_message("assistant"):
-                message_placeholder = st.empty()
-                full_response = ""
-                for response in think_answer(all_text, model):
-                    full_response += response["choices"][0]["delta"].get("content", "")
-                    message_placeholder.write(full_response)
+            if all([ask_submit, all_text]):
+                with st.chat_message("assistant"):
+                    message_placeholder = st.empty()
+                    full_response = ""
+                    for response in think_answer(all_text, model):
+                        full_response += response["choices"][0]["delta"].get(
+                            "content", ""
+                        )
+                        message_placeholder.write(full_response)
+        else:
+            st.image("./image/logo.png")
     else:
-        st.image("./image/logo.png")
+        st.info("👈OPEN_AI_KEYを入力してください。")
