@@ -1,4 +1,3 @@
-import os
 import tempfile
 import time
 from pathlib import Path
@@ -56,37 +55,43 @@ def reading_data(data, name):
     check_name = name.lower()
 
     if "http" in check_name:
-        BeautifulSoupWebReader = download_loader("BeautifulSoupWebReader")
+        BeautifulSoupWebReader = download_loader(
+            "BeautifulSoupWebReader", costom_path="local_dir"
+        )
         loader = BeautifulSoupWebReader()
         documents = loader.load_data(urls=[name])[0].text
     elif ".pdf" in check_name:
-        PDFReader = download_loader("PDFReader")
+        PDFReader = download_loader("PDFReader", costom_path="local_dir")
         loader = PDFReader()
         documents = loader.load_data(file=data)[0].text
     elif ".xlsx" in check_name:
-        PandasExcelReader = download_loader("PandasExcelReader")
+        PandasExcelReader = download_loader(
+            "PandasExcelReader", costom_path="local_dir"
+        )
         loader = PandasExcelReader(pandas_config={"header": 0})
         documents = loader.load_data(file=data)[0].text
     elif any([".txt" in check_name, ".md" in name]):
-        MarkdownReader = download_loader("MarkdownReader")
+        MarkdownReader = download_loader("MarkdownReader", costom_path="local_dir")
         loader = MarkdownReader()
         documents = loader.load_data(file=data)[0].text
     elif ".pptx" in check_name:
         documents = reading_ppt(data)
-    elif ".docx" in check_name:
-        DocxReader = download_loader("DocxReader")
+    elif any([".docx" in check_name, ".doc" in check_name]):
+        DocxReader = download_loader("DocxReader", costom_path="local_dir")
         loader = DocxReader()
         documents = [value.text for value in loader.load_data(file=data)]
     elif any([".mp3" in check_name, ".mp4" in check_name]):
-        AudioTranscriber = download_loader("AudioTranscriber")
+        AudioTranscriber = download_loader("AudioTranscriber", costom_path="local_dir")
         loader = AudioTranscriber()
         documents = loader.load_data(file=data)[0].text
     elif ".csv" in check_name:
-        PandasCSVReader = download_loader("PandasCSVReader")
+        PandasCSVReader = download_loader("PandasCSVReader", costom_path="local_dir")
         loader = PandasCSVReader()
         documents = loader.load_data(file=data)[0].text
     elif "youtu" in check_name:
-        YoutubeTranscriptReader = download_loader("YoutubeTranscriptReader")
+        YoutubeTranscriptReader = download_loader(
+            "YoutubeTranscriptReader", costom_path="local_dir"
+        )
         loader = YoutubeTranscriptReader()
         documents = loader.load_data(ytlinks=[name])[0].text
     # elif ext in [".png", ".jpeg", ".jpg"]:
@@ -95,7 +100,7 @@ def reading_data(data, name):
     #     documents = loader.load_data(file=data)
     else:
         try:
-            MarkdownReader = download_loader("MarkdownReader")
+            MarkdownReader = download_loader("MarkdownReader", costom_path="local_dir")
             loader = MarkdownReader()
             documents = loader.load_data(file=data)[0].text
         except:
@@ -200,7 +205,9 @@ if __name__ == "__main__":
 
     if openai.api_key:
         if any([file, url]):
-            with st.expander(f"抽出結果:{file.name if file else url} / {len(all_text)}字"):
+            with st.expander(
+                f"抽出結果:{file.name if file else url} / {len(all_text)}字"
+            ):
                 st.code(all_text)
 
             col1, col2 = st.columns(2)
