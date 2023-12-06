@@ -56,41 +56,41 @@ def reading_data(data, name):
 
     if "http" in check_name:
         BeautifulSoupWebReader = download_loader(
-            "BeautifulSoupWebReader", costom_path="local_dir"
+            "BeautifulSoupWebReader", custom_path="local_dir"
         )
         loader = BeautifulSoupWebReader()
         documents = loader.load_data(urls=[name])[0].text
     elif ".pdf" in check_name:
-        PDFReader = download_loader("PDFReader", costom_path="local_dir")
+        PDFReader = download_loader("PDFReader", custom_path="local_dir")
         loader = PDFReader()
         documents = loader.load_data(file=data)[0].text
     elif ".xlsx" in check_name:
         PandasExcelReader = download_loader(
-            "PandasExcelReader", costom_path="local_dir"
+            "PandasExcelReader", custom_path="local_dir"
         )
         loader = PandasExcelReader(pandas_config={"header": 0})
         documents = loader.load_data(file=data)[0].text
     elif any([".txt" in check_name, ".md" in name]):
-        MarkdownReader = download_loader("MarkdownReader", costom_path="local_dir")
+        MarkdownReader = download_loader("MarkdownReader", custom_path="local_dir")
         loader = MarkdownReader()
         documents = loader.load_data(file=data)[0].text
     elif ".pptx" in check_name:
         documents = reading_ppt(data)
     elif any([".docx" in check_name, ".doc" in check_name]):
-        DocxReader = download_loader("DocxReader", costom_path="local_dir")
+        DocxReader = download_loader("DocxReader", custom_path="local_dir")
         loader = DocxReader()
         documents = [value.text for value in loader.load_data(file=data)]
     elif any([".mp3" in check_name, ".mp4" in check_name]):
-        AudioTranscriber = download_loader("AudioTranscriber", costom_path="local_dir")
+        AudioTranscriber = download_loader("AudioTranscriber", custom_path="local_dir")
         loader = AudioTranscriber()
         documents = loader.load_data(file=data)[0].text
     elif ".csv" in check_name:
-        PandasCSVReader = download_loader("PandasCSVReader", costom_path="local_dir")
+        PandasCSVReader = download_loader("PandasCSVReader", custom_path="local_dir")
         loader = PandasCSVReader()
         documents = loader.load_data(file=data)[0].text
     elif "youtu" in check_name:
         YoutubeTranscriptReader = download_loader(
-            "YoutubeTranscriptReader", costom_path="local_dir"
+            "YoutubeTranscriptReader", custom_path="local_dir"
         )
         loader = YoutubeTranscriptReader()
         documents = loader.load_data(ytlinks=[name])[0].text
@@ -100,7 +100,7 @@ def reading_data(data, name):
     #     documents = loader.load_data(file=data)
     else:
         try:
-            MarkdownReader = download_loader("MarkdownReader", costom_path="local_dir")
+            MarkdownReader = download_loader("MarkdownReader", custom_path="local_dir")
             loader = MarkdownReader()
             documents = loader.load_data(file=data)[0].text
         except:
