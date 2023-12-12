@@ -196,8 +196,9 @@ if __name__ == "__main__":
                     message_placeholder = st.empty()
                     full_response = ""
                     for response in think_answer(all_text, model):
-                        full_response += response.choices[0].delta.content
-                        message_placeholder.write(full_response)
+                        if response:
+                            full_response += response.choices[0].delta.content
+                            message_placeholder.write(full_response)
         else:
             st.image("./image/logo.png")
     else:
