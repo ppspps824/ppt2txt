@@ -1,5 +1,4 @@
 import tempfile
-import time
 from pathlib import Path
 
 import openai
@@ -132,40 +131,12 @@ def think_answer(text, model):
     """
 
     messages = [{"role": "user", "content": prompt}]
-    try_count = 3
-    error_mes = ""
-    for try_time in range(try_count):
-        try:
-            resp = openai.ChatCompletion.create(
-                model=model,
-                messages=messages,
-                stream=True,
-                timeout=120,
-                request_timeout=120,
-            )
-            return resp
-
-        except openai.error.APIError as e:
-            print(e)
-            print(f"retry:{try_time+1}/{try_count}")
-            error_mes = e
-            time.sleep(1)
-        except openai.error.InvalidRequestError as e:
-            print(e)
-            print(f"retry:{try_time+1}/{try_count}")
-            error_mes = e
-            pass
-        except (
-            openai.error.RateLimitError,
-            openai.error.openai.error.APIConnectionError,
-        ) as e:
-            print(e)
-            print(f"retry:{try_time+1}/{try_count}")
-            error_mes = e
-            time.sleep(10)
-
-    st.error(error_mes)
-    st.stop()
+    resp = openai.chat.completions.create(
+        model=model,
+        messages=messages,
+        stream=True,
+    )
+    return resp
 
 
 if __name__ == "__main__":
@@ -225,9 +196,7 @@ if __name__ == "__main__":
                     message_placeholder = st.empty()
                     full_response = ""
                     for response in think_answer(all_text, model):
-                        full_response += response["choices"][0]["delta"].get(
-                            "content", ""
-                        )
+                        full_response += response.choices[0].delta.content
                         message_placeholder.write(full_response)
         else:
             st.image("./image/logo.png")
